@@ -1,14 +1,15 @@
 let progressBar = document.querySelectorAll("#progressbar > li");
 let forms = document.querySelectorAll("fieldset");
 
-let nextBtn = document.querySelectorAll(".action-button");
+let nextBtn = document.querySelectorAll(".next");
+let previousBtn = document.querySelectorAll(".previous");
+let submitBtn = document.querySelector(".submit");
 
 function validateForm(page) {
   let validate = true;
   let data = document.querySelectorAll(
     `form fieldset:nth-of-type(${page + 1}) input:not([type='button'])`
   );
-  console.log(data);
 
   for (let i = 0; i < data.length; i++) {
     if (String(data[i].value) == "") {
@@ -17,37 +18,53 @@ function validateForm(page) {
       return validate;
     }
   }
-  
-  if (page == 0) {
-    if (String(data[0].value).length < 8) {
-      alert("Senha muito pequena.");
-      validate = false;
-      return validate;
-    }
-
-    if (String(data[1].value) != String(data[2].value)) {
-      alert("Senhas diferentes.");
-      validate = false;
-      return validate;
-    }
-    if (String(data[1].value).length < 8) {
-      alert("Senha muito pequena.");
-      return validate;
-    }
-  }
   return validate;
 }
 
-function trocarDePagina(i, e) {
-  if (validateForm(i)) {
-    forms[i].style.display = "none";
-    progressBar[i].classList.remove("active");
-    forms[i + 1].style.display = "block";
-    progressBar[i + 1].classList.add("active");
+function avancarPagina(page) {
+  if (validateForm(page)) {
+    forms[page].style.display = "none";
+    progressBar[page].classList.remove("active");
+    forms[page + 1].style.display = "block";
+    progressBar[page + 1].classList.add("active");
   }
-  e.preventDefault();
+}
+function voltarPagina(page) {
+  forms[page].style.display = "none";
+  progressBar[page].classList.remove("active");
+  forms[page - 1].style.display = "block";
+  progressBar[page - 1].classList.add("active");
 }
 
 for (let i = 0; i < nextBtn.length; i++) {
-  nextBtn[i].addEventListener("click", () => trocarDePagina(i));
+  nextBtn[i].addEventListener("click", () => avancarPagina(i));
 }
+for (let i = 0; i < previousBtn.length; i++) {
+  previousBtn[i].addEventListener("click", () => voltarPagina(i + 1));
+}
+
+/*
+if (page == 0) {
+  if (String(data[0].value).indexOf(" ") < 0 ) {
+    alert("Email não pode conter espaços em branco.");
+    validate = false;
+    return validate;
+  }
+  if (String(data[1].value).indexOf(" ") < 0 ) {
+    alert("Senha não pode conter espaços em branco.");
+    validate = false;
+    return validate;
+  }
+
+  if (String(data[1].value) != String(data[2].value)) {
+    alert("Senhas diferentes.");
+    validate = false;
+    return validate;
+  }
+  if (String(data[1].value).length < 8) {
+    alert("Senha muito pequena.");
+    validate = false;
+    return validate;
+  }
+}
+*/
